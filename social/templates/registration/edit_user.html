@@ -1,0 +1,11 @@
+{% extends "parent/base.html" %}
+{% block title %}Edit account{% endblock %}
+{% block content %}
+    <h2>ویرایش اطلاعات شخصی</h2>
+    <p>لطفا اطلاعات خود را ویرایش کنید</p>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        <input type="submit" value="ویرایش">
+    </form>
+{% endblock %}
