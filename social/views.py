@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.http import HttpResponse
 from .forms import *
+from django.core.mail import send_mail
+import datetime
 # Create your views here.
 
 
@@ -42,3 +44,20 @@ def edit_user(request):
         "user_form": user_form
     }
     return render(request, 'registration/edit_user.html', context)
+
+
+def ticket(request):
+    sent = False
+    if request.method == "POST":
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            now = datetime.datetime.now()
+            message = f"{cd['name']}\n{cd['email']}\n{cd['phone']}\n{now.strftime("%Y-%m-%d %H:%M")}\n\n{cd['message']}"
+            send_mail(cd['subject'], message, cd['email'], ['pcnoo2023@gmail.com'], fail_silently=False)
+            # ticket_obj = Ticket.objects.create(message=cd['message'], name=cd['name'], email=cd['email']
+            #                                    , phone=cd['phone'], subject=cd['subject'])
+            sent = True
+    else:
+        form = TicketForm()
+    return render(request, "forms/ticket.html", {'form': form, 'sent': sent})
