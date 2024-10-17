@@ -1,0 +1,97 @@
+@font-face {
+    font-family: "Poppins";
+    src: url(../fonts/VAZIRMATN-REGULAR.ttf) format("ttf");
+}
+*{
+    box-sizing: border-box;
+    margin: 0;
+}
+body {
+    background-color: #080710;
+    font-family: "Vazirmatn", serif;
+    font-size: 16px;
+}
+.all_items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    position: relative;
+}
+.shapes {
+    position: absolute;
+}
+.shape1 {
+    position: absolute;
+    left: -300px;
+    top: -320px;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    background: linear-gradient(167deg, rgba(0,19,101,1) 0%, rgba(0,157,232,1) 100%);
+}
+.shape2 {
+    position: absolute;
+    right: -260px;
+    bottom: -320px;
+    width: 200px;
+    height: 200px;
+    border-radius: 100%;
+    background: linear-gradient(90deg, rgba(255,102,0,1) 30%, rgba(255,209,0,1) 100%);
+}
+.login-form {
+    background: rgba(255, 255, 255, 0.13);
+    box-shadow: 0 0 40px rgba(0, 0, 0, .5);
+    backdrop-filter: blur(7px);
+    position: absolute;
+    width: 400px;
+    border-radius: 10px;
+    color: white;
+    z-index: 3;
+    padding: 50px 35px 35px;
+    border: 2px solid rgba(255, 255, 255, 0.13);
+}
+.title {
+    text-align: center;
+    font-weight: normal;
+    font-size: 32px;
+}
+.labels {
+    display: inline-block;
+    margin: 25px 0px 10px 0px;
+    font-weight: normal;
+    font-size: 16px;
+    text-align: left;
+
+}
+.first-h2 {
+    margin-top: 35px;
+}
+input {
+    width: 100%;
+    height: 50px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 7px;
+    padding: 10px;
+    border: 0;
+    font-weight: 300;
+    font-size: 14px;
+    font-family: "Vazirmatn";
+    outline: none;
+    color: white;
+}
+#submit-button {
+    width: 100%;
+    padding: 10px 0 15px 0;
+    background-color: white;
+    color: #080710;
+    font-size: 18px;
+    border-radius: 7px;
+    border: none;
+    margin-top: 40px;
+    font-family: "Vazirmatn";
+
+}
+input::placeholder {
+    color: rgb(227, 227, 227);
+}

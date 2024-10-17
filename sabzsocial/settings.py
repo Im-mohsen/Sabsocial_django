@@ -30,13 +30,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "social.apps.SocialConfig",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "social.apps.SocialConfig"
 ]
 
 MIDDLEWARE = [
@@ -128,3 +128,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'images')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'social.User'
+
+# LOGIN_REDIRECT_URL = '/profile'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # default
+    'social.authentication.PhoneAuthBackend',  # we add this
+    'social.authentication.EmailAuthBackend',  # we add this'
+]
