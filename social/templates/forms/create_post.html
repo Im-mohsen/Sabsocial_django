@@ -1,0 +1,37 @@
+{% extends "parent/base.html" %}
+{% block title %}New Post{% endblock %}
+{% block content %}
+    <div class="forms_page">
+        <h2>ایجاد پست جدید</h2>
+        <form method="post" class="forms_box">
+            {% csrf_token %}
+            <label for="id_description">توضیحات:</label>
+            <br>
+            <textarea name="description" id="id_description" required cols="40" rows="10">
+                {% if form.description.value %} {{ form.description.value }} {% endif %}</textarea>
+            <br>
+            <label for="id_tags">تگ ها:</label>
+            <br>
+            <input id="id_tags" type="text" name="tags" aria-describedby="id_tags_helptext">
+            <span id="id_tags_helptext">برای جداسازی تگ ها از کاما استفاده کنید.</span>
+            <br>
+            <input type="submit" value="ایجاد پست" id="bt_submit">
+        </form>
+        {% if form.errors%}
+            لطفا خطاهای زیر را اصلاح کنید!!
+            <br>
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        {{ field.label }} : {{ error }}
+                        <br>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+        {% endif %}
+    </div>
+{% endblock %}
