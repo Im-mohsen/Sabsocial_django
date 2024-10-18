@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
+from django.urls import reverse
 # Create your models here.
 
 
@@ -18,6 +19,7 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
     tags = TaggableManager()
+
     class Meta:
         ordering = ["-created"]
         indexes = [
@@ -28,3 +30,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.author.first_name
+
+    def get_absolute_url(self):
+        return reverse("social:post_detail", args=[self.id])

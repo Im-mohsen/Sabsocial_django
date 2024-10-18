@@ -7,6 +7,7 @@ from .models import Post
 from django.core.mail import send_mail
 import datetime
 from taggit.models import Tag
+from django.db.models import Count
 # Create your views here.
 
 
@@ -91,3 +92,15 @@ def create_post(request):
     else:
         form = PostForm()
     return render(request, "forms/create_post.html", {'form': form})
+
+
+def post_detail(request, pk):
+    post = get_object_or_404(Post, id=pk)
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_post = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_post = similar_post.annotate(same_tags=Count('tags')).order_by('-same_tags', '-created')[:3]
+    context = {
+        "post": post,
+        "similar_post": similar_post
+    }
+    return render(request, "social/post_detail.html", context)
