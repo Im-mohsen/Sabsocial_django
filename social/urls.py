@@ -14,6 +14,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('user/edit', views.edit_user, name='edit_user'),
     path('ticket/', views.ticket, name="ticket"),
+    path('posts/', views.post_list, name="post_list"),
 
     path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done', template_name='registration/password_change_form.html'),name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),

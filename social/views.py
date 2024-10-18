@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.http import HttpResponse
 from .forms import *
+from .models import Post
 from django.core.mail import send_mail
 import datetime
 # Create your views here.
@@ -61,3 +62,11 @@ def ticket(request):
     else:
         form = TicketForm()
     return render(request, "forms/ticket.html", {'form': form, 'sent': sent})
+
+
+def post_list(request):
+    posts = Post.objects.all()
+    context = {
+        "posts": posts,
+    }
+    return render(request, "social/post_list.html", context)

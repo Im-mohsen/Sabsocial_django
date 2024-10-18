@@ -1,0 +1,27 @@
+{% extends "parent/base.html" %}
+{% block title %}Post List{% endblock %}
+{% block content %}
+    <h1><a href="{% url 'social:post_list' %}" >لیست پست ها</a></h1>
+    <div class="container3">
+        <div id="column_of_container3">
+            <ol style="width:80%; --length: {{ posts|length }} " role="list">
+                {% for post in posts %}
+                    <li style="--i: {{ forloop.counter }}">
+{#                        <h3 class="post_list_h3">#}
+{#                        <a href="{{ post.get_absolute_url }}">#}
+{#                        {{ post.title}}#}
+{#                        </a>#}
+{#                        </h3>#}
+                        <div>
+                            <p>{{ post.description |truncatewords:20 |linebreaks }}</p>
+                            <p>Published at {{ post.created }} by {{ post.author }}</p>
+                            <p>{{ post.tags.all |join:', ' }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+
+
+{% endblock %}
