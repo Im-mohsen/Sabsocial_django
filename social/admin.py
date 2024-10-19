@@ -18,3 +18,7 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ['author','created']
     ordering = ["created"]
     search_fields = ["description"]
+
+@admin.register(Image)
+class ImageAdmin(admin.ModelAdmin):
+    list_display = ['post', 'title', 'created']

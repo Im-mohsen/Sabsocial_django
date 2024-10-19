@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
 from django.urls import reverse
+from django_resized import ResizedImageField
 # Create your models here.
 
 
@@ -33,3 +34,27 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse("social:post_detail", args=[self.id])
+
+
+def user_directory_path(instance, filename):
+    user = instance.post.author.username
+    return f"post_images/{user}/{filename}"
+
+
+class Image(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="images", verbose_name="پست")
+    image_file = ResizedImageField(upload_to=user_directory_path, size=[600, 340], quality=80,
+                                   crop=['middle', 'center'], null=True, blank=True)
+    title = models.CharField(max_length=250, verbose_name="عنوان عکس", null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
+
+    class Meta:
+        ordering = ["-created"]
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+        verbose_name = "تصویر"
+        verbose_name_plural = "تصویر ها"
+
+    def __str__(self):
+        return f"title: {self.title}" if self.title else f"image_name: {self.image_file}"
