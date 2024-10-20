@@ -19,7 +19,24 @@ from django.db.models import Q
 
 
 def profile(request):
-    return HttpResponse("Hello, world. You're at the blog index.")
+    user = request.user
+    all_posts = Post.objects.filter(author=user)
+
+    # صفحه بندی
+    paginator = Paginator(all_posts, 5)
+    page_number = request.GET.get('page', 1)
+
+    try:
+        page_obj = paginator.page(page_number)
+    except EmptyPage:
+        page_obj = paginator.page(page_number.num_pages)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+
+    context = {
+        'page_obj': page_obj,
+    }
+    return render(request, 'social/profile.html', context)
 
 
 def log_out(request):
@@ -98,12 +115,13 @@ def post_list(request, tag_slug=None):
 @login_required
 def create_post(request):
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
             post.save()
             form.save_m2m()
+            Image.objects.create(image_file=form.cleaned_data['image'], post=post)
             return redirect("social:profile")
     else:
         form = PostForm()

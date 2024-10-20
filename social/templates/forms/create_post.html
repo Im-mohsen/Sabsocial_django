@@ -3,7 +3,7 @@
 {% block content %}
     <div class="forms_page">
         <h2>ایجاد پست جدید</h2>
-        <form method="post" class="forms_box">
+        <form method="post" enctype="multipart/form-data" class="forms_box" >
             {% csrf_token %}
             <label for="id_description">توضیحات:</label>
             <br>
@@ -14,6 +14,10 @@
             <br>
             <input id="id_tags" type="text" name="tags" aria-describedby="id_tags_helptext">
             <span id="id_tags_helptext">برای جداسازی تگ ها از کاما استفاده کنید.</span>
+            <br>
+            <label for="id_image">تصویر:</label>
+            <br>
+            <input type="file" name="image" accept="image/*" aria-invalid="true" id="id_image">
             <br>
             <input type="submit" value="ایجاد پست" id="bt_submit">
         </form>

@@ -21,6 +21,7 @@ urlpatterns = [
     path('posts/<post_id>/comment', views.post_comment, name="post_comment"),
     path('search/', views.post_search, name="post_search"),
 
+
     path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done', template_name='registration/password_change_form.html'),name='password_change'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
 
