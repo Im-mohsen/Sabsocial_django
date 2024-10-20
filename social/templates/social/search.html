@@ -1,0 +1,14 @@
+{% extends "parent/base.html" %}
+{% block title %}Post Search{% endblock %}
+{% block content %}
+    {% if query %}
+    	<p>نتایج جستجو برای {{ query }} در پست ها {{ results.count }} می باشد.</p>
+        <br>
+        {% for post in results %}
+            <a href="{{ post.get_absolute_url }}"> {{ post.description |truncatewords:5 }}</a>
+            <hr>
+        {% empty %}
+            <p>هیچ نتیجه ای یافت نشد</P>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

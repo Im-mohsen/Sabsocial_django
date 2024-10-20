@@ -1,0 +1,37 @@
+
+<div class="container1 header">
+    <div class="container2">
+        <form method="get" action=" {% url "social:post_search" %}">
+            <label>
+                <input type="text" name="query" required placeholder="کلمه مورد نظر را وارد کنید...">
+            </label>
+            <input type="submit" value="جستجو">
+        </form>
+    </div>
+    <br>
+    <div class="container2">
+        <div>
+            <p><a href="{% url 'social:post_list' %}">صفحه اصلی</a></p>
+        </div>
+{#        {% if request.user.is_authenticated %}#}
+        <div>
+            <p><a href="{% url 'social:profile' %}">پروفایل</a></p>
+        </div>
+{#        {% else %}#}
+{#            <div>#}
+{#                <p><a href="{% url 'blog:login' %}">پروفایل</a></p>#}
+{#            </div>#}
+{#        {% endif %}#}
+
+        {% if request.user.is_authenticated %}
+            <div class="login-box">
+                <a href="{% url 'social:profile' %}" class="login-key">{{ request.user.first_name |default:request.user.username}}</a>
+            </div>
+        {% else %}
+            <div class="login-box">
+                <a href="{% url 'social:login' %}">ورود</a>
+{#                <a href="{% url 'social:register' %}">ثبت نام</a>#}
+            </div>
+        {% endif %}
+    </div>
+</div>

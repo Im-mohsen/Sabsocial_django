@@ -29,7 +29,6 @@ class UserRegisterForm(forms.ModelForm):
         return phone
 
 
-
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
@@ -98,3 +97,7 @@ class CommentForm(forms.ModelForm):
         #     'name': forms.TextInput(attrs={'class': 'boxes_form'}),
         #     'email': forms.TextInput(attrs={'class': 'boxes_form'})
         # }
+
+
+class SearchForm(forms.Form):
+    query = forms.CharField(max_length=250)

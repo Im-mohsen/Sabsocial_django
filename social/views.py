@@ -10,6 +10,9 @@ from django.core.mail import send_mail
 import datetime
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import TrigramSimilarity
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+from django.db.models import Q
 
 
 # Create your views here.
@@ -136,3 +139,23 @@ def post_comment(request, post_id):
         'comment': comment
     }
     return render(request, "forms/comment.html", context)
+
+
+def post_search(request):
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(data=request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results1 = Post.objects.annotate(similarity=TrigramSimilarity('tags__name', query)).\
+                filter(similarity__gt=0.1)
+            results2 = Post.objects.annotate(similarity=TrigramSimilarity('description', query)).\
+                filter(similarity__gt=0.1)
+            results = (results1 | results2).order_by('-similarity').distinct()
+
+    context = {
+        'query': query,
+        'results': results,
+    }
+    return render(request, 'social/search.html', context)
