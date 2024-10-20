@@ -3,12 +3,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
 from .models import Post
 from django.core.mail import send_mail
 import datetime
 from taggit.models import Tag
 from django.db.models import Count
+
+
 # Create your views here.
 
 
@@ -69,6 +72,15 @@ def ticket(request):
 
 def post_list(request, tag_slug=None):
     posts = Post.objects.all()
+    paginator = Paginator(posts, 3)
+    page_number = request.GET.get('page', 1)
+    try:
+        posts = paginator.page(page_number)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
