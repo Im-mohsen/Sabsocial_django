@@ -201,3 +201,11 @@ def delete_image(request, image_id):
     image = get_object_or_404(Image, id=image_id)
     image.delete()
     return redirect('social:profile')
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.delete()
+        return redirect('social:profile')
+    return render(request, 'forms/delete_post.html', {'post': post})

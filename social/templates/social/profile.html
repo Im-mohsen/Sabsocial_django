@@ -29,7 +29,7 @@
                 <td>{{ post.description |truncatewords:5 }}</td>
                 <td><a href="{{ post.get_absolute_url }}">مشاهده</a></td>
                 <td><a href="{% url 'social:edit_post' post.id %}">ویرایش</a></td>
-{#                <td><a href="{% url 'blog:delete_post' post.id %}">حذف</a></td>#}
+                <td><a href="{% url 'social:delete_post' post.id %}">حذف</a></td>
                 <td><button type="button" data-bs-toggle="modal" data-bs-target="#postModal{{ post.id }}">مشاهده نظرات</button></td>
             </tr>
             {% include "social/modal_comment.html" with post=post %}
