@@ -24,6 +24,32 @@
         {% empty %}
             <p>There are no similar posts</p>
         {% endfor %}
+        <div>
+            {% with  comments.count as cm_count%}
+                <h3>{{ cm_count }} comment{{ cm_count |pluralize }}</h3>
+            {% endwith %}
+        </div>
+        <div class="comment_box">
+            {% for comment in comments %}
+                <div id="comment_title">
+                    {{ comment.name }}
+                    <br>
+                    {{ comment.created}}
+                    <br>
+                </div>
+                {{ comment.body |linebreaks }}
+                <hr>
+            {% empty %}
+                کامنتی وجود ندارد!!
+            {% endfor %}
+            <div class="comment_form">
+                <form method="post" action="{% url 'social:post_comment' post.id %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="افزودن کامنت">
+                </form>
+            </div>
+        </div>
         
     </div>
 {% endblock %}

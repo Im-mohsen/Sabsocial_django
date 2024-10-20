@@ -19,6 +19,14 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ["created"]
     search_fields = ["description"]
 
+
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
     list_display = ['post', 'title', 'created']
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ['post', 'name', 'created', 'email']
+    list_filter = ["created", "updated"]
+    search_fields = ["name", "body"]
