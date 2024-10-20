@@ -12,12 +12,20 @@
             <br>
             <label for="id_tags">تگ ها:</label>
             <br>
-            <input id="id_tags" type="text" name="tags" aria-describedby="id_tags_helptext">
+            <input id="id_tags" type="text" name="tags" aria-describedby="id_tags_helptext"
+                {% if form.tags.value %} value="{{ form.tags.value |join:', ' }}" {% endif %}>
             <span id="id_tags_helptext">برای جداسازی تگ ها از کاما استفاده کنید.</span>
             <br>
             <label for="id_image">تصویر:</label>
             <br>
             <input type="file" name="image" accept="image/*" aria-invalid="true" id="id_image">
+            <br>
+            {% if post %}
+                {% for img in post.images.all %}
+                    <img style="max-width: 40%" src="{{ img.image_file.url }}" alt="{{ img.title }}">
+                    <a href="{% url 'social:delete_image' img.id %}">حذف تصویر</a>
+                {% endfor %}
+            {% endif %}
             <br>
             <input type="submit" value="ایجاد پست" id="bt_submit">
         </form>

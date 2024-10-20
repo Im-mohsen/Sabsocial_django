@@ -20,6 +20,8 @@ urlpatterns = [
     path('posts/detail/<pk>', views.post_detail, name="post_detail"),
     path('posts/<post_id>/comment', views.post_comment, name="post_comment"),
     path('search/', views.post_search, name="post_search"),
+    path('profile/create_post/<post_id>', views.edit_post, name="edit_post"),
+    path('profile/delete_image/<image_id>', views.delete_image, name="delete_image"),
 
 
     path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done', template_name='registration/password_change_form.html'),name='password_change'),

@@ -177,3 +177,27 @@ def post_search(request):
         'results': results,
     }
     return render(request, 'social/search.html', context)
+
+
+@login_required
+def edit_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            form.save_m2m()
+            Image.objects.create(image_file=form.cleaned_data['image'], post=post)
+            return redirect("social:profile")
+    else:
+        form = PostForm(instance=post)
+    return render(request, "forms/create_post.html", {'form': form, 'post': post})
+
+
+@login_required
+def delete_image(request, image_id):
+    image = get_object_or_404(Image, id=image_id)
+    image.delete()
+    return redirect('social:profile')

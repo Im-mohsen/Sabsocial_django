@@ -11,12 +11,12 @@
         <input type="submit" value="خروج">
     </form>
     <p><a href="{% url 'social:password_change' %}">تغییر رمز عبور</a></p>
-{#    <p><a href="{% url 'social:edit_account' %}">تغییر اطلاعات شخصی</a></p>#}
+    <p><a href="{% url 'social:edit_user' %}">تغییر اطلاعات شخصی</a></p>
     <table class="post_profile_table">
         <tr>
             <th>ردیف</th>
             <th>پست</th>
-            <th>عنوان پست</th>
+            <th>کپشن</th>
             <th>مشاهده</th>
             <th>ویرایش</th>
             <th>حذف</th>
@@ -26,10 +26,9 @@
             <tr>
                 <td>{{ forloop.counter }}</td>
                 <td><img src="{{ post.images.first.image_file.url }}" alt="{{post.images.first.title}}" class="img_profile"></td>
-                <td>{{ post.title }}</td>
-                <td>{{ post.status }}</td>
+                <td>{{ post.description |truncatewords:5 }}</td>
                 <td><a href="{{ post.get_absolute_url }}">مشاهده</a></td>
-{#                <td><a href="{% url 'blog:edit_post' post.id %}">ویرایش</a></td>#}
+                <td><a href="{% url 'social:edit_post' post.id %}">ویرایش</a></td>
 {#                <td><a href="{% url 'blog:delete_post' post.id %}">حذف</a></td>#}
                 <td><button type="button" data-bs-toggle="modal" data-bs-target="#postModal{{ post.id }}">مشاهده نظرات</button></td>
             </tr>
