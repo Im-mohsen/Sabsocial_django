@@ -1,5 +1,6 @@
 from django import forms
 from .models import *
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import AuthenticationForm
 
 
@@ -107,3 +108,8 @@ class CommentForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField(max_length=250)
+
+
+class CustomPasswordChangeForm(SetPasswordForm):
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(user, *args, **kwargs)

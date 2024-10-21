@@ -11,32 +11,34 @@ import datetime
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
-from django.db.models import Q
+from django.contrib import messages
 
 
 # Create your views here.
 
 
 def profile(request):
-    user = request.user
-    all_posts = Post.objects.filter(author=user)
+    if request.user.is_authenticated:
+        user = request.user
+        all_posts = Post.objects.filter(author=user)
 
-    # صفحه بندی
-    paginator = Paginator(all_posts, 5)
-    page_number = request.GET.get('page', 1)
+        # صفحه بندی
+        paginator = Paginator(all_posts, 5)
+        page_number = request.GET.get('page', 1)
 
-    try:
-        page_obj = paginator.page(page_number)
-    except EmptyPage:
-        page_obj = paginator.page(page_number.num_pages)
-    except PageNotAnInteger:
-        page_obj = paginator.page(1)
+        try:
+            page_obj = paginator.page(page_number)
+        except EmptyPage:
+            page_obj = paginator.page(page_number.num_pages)
+        except PageNotAnInteger:
+            page_obj = paginator.page(1)
 
-    context = {
-        'page_obj': page_obj,
-    }
-    return render(request, 'social/profile.html', context)
+        context = {
+            'page_obj': page_obj,
+        }
+        return render(request, 'social/profile.html', context)
+    else:
+        return render(request,'registration/login.html')
 
 
 def user_login(request):
@@ -220,6 +222,7 @@ def delete_image(request, image_id):
     image.delete()
     return redirect('social:profile')
 
+
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
@@ -227,3 +230,21 @@ def delete_post(request, post_id):
         post.delete()
         return redirect('social:profile')
     return render(request, 'forms/delete_post.html', {'post': post})
+
+
+@login_required
+def password_change(request):
+    if request.method == 'POST':
+        form = CustomPasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            # messages.success(request, 'پسورد شما با موفقیت تغییر کرد.')
+            return redirect('done/')  # به صفحه‌ای که می‌خواهید بعد از تغییر به آن بروید
+    else:
+        form = CustomPasswordChangeForm(user=request.user)
+
+    return render(request, 'registration/password_change_form.html', {'form': form})
+
+
+def password_change_done(request):
+    return render(request, 'registration/password_change_done.html')

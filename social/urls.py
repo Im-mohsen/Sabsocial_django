@@ -25,8 +25,10 @@ urlpatterns = [
     path('profile/delete_post/<post_id>', views.delete_post, name="delete_post"),
 
 
-    path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done', template_name='registration/password_change_form.html'),name='password_change'),
-    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    # path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done'),name='password_change'),
+    path('password_change/', views.password_change, name='password_change'),
+    # path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
+    path('password_change/done/', views.password_change_done, name='password_change_done'),
 
     path('password_reset/', auth_views.PasswordResetView.as_view(success_url='done'), name='password_reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
