@@ -27,7 +27,7 @@
                 <input type="password" placeholder="رمز عبور" id="password" name="password" required>
                 <input type="hidden" name="next" value="{{ next }}">
                 <input type="submit" id="submit-button" value="ورود">
-{#                <p><a href="{% url 'social:password_reset' %}">آیا رمز خود را فراموش کرده اید؟</a></p>#}
+                <p><a href="{% url 'social:password_reset' %}">آیا رمز خود را فراموش کرده اید؟</a></p>
                 {% if form.errors %}
                     <p>نام کاربری یا رمز عبور وارد شده صحیح نیست.</p>
                 {% endif %}

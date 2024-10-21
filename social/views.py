@@ -39,10 +39,28 @@ def profile(request):
     return render(request, 'social/profile.html', context)
 
 
+def user_login(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = authenticate(request, username=cd['username'], password=cd['password'])
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect("social:profile")
+                else:
+                    return HttpResponse("Your account is disabled.")
+            else:
+                return HttpResponse("Invalid login.")
+    else:
+        form = LoginForm()
+    return render(request, "registration/login.html", {'form': form})
+
+
 def log_out(request):
     logout(request)
-    # return redirect(request.META.get('HTTP_REFERER'))
-    return HttpResponse("You've been logged out.")
+    return render(request, 'registration/logged_out.html')
 
 
 def register(request):
