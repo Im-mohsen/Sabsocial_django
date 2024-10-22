@@ -19,6 +19,7 @@ class Post(models.Model):
     description = models.TextField(verbose_name="توضیحات")
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
+    likes = models.ManyToManyField(User, blank=True, related_name="liked_posts")
     tags = TaggableManager()
 
     class Meta:

@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
@@ -11,7 +11,7 @@ import datetime
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
-from django.contrib import messages
+
 
 
 # Create your views here.
@@ -248,3 +248,26 @@ def password_change(request):
 
 def password_change_done(request):
     return render(request, 'registration/password_change_done.html')
+
+
+@login_required
+@require_POST
+def like_post(request):
+    post_id = request.POST.get('post_id')
+    if post_id is not None:
+        post = get_object_or_404(Post,id=post_id)
+        user = request.user
+        if user in post.likes.all():
+            post.likes.remove(user)
+            liked = False
+        else:
+            post.likes.add(user)
+            liked = True
+        post_likes_count = post.likes.count()
+        response_data = {
+            'likes_count': post_likes_count,
+            'liked': liked,
+        }
+    else:
+        response_data = {'error': 'Invalid post_id'}
+    return JsonResponse(response_data)
