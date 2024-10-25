@@ -3,7 +3,12 @@ from django.contrib.auth.models import AbstractUser
 from taggit.managers import TaggableManager
 from django.urls import reverse
 from django_resized import ResizedImageField
+# from django.contrib.auth.models import User
+# from django.contrib.auth import get_user_model
 # Create your models here.
+
+# user_model = get_user_model()
+# user_model.add_to_class('following', models.ManyToManyField('self', through=Contact, related_name='followers', symmetrical=False))
 
 
 class User(AbstractUser):
@@ -12,6 +17,7 @@ class User(AbstractUser):
     photo = models.ImageField(upload_to="account_image/", null=True, blank=True)
     job = models.CharField(max_length=250, blank=True, null=True)
     phone = models.CharField(max_length=11, blank=True, null=True)
+    following = models.ManyToManyField('self', through='Contact', related_name='followers', symmetrical=False)
 
 
 class Post(models.Model):
@@ -80,3 +86,18 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.name}: {self.post}"
+
+
+class Contact(models.Model):
+    user_from = models.ForeignKey(User, related_name="rel_from_set", on_delete=models.CASCADE)
+    user_to = models.ForeignKey(User, related_name="rel_to_set", on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+        ordering = ('-created',)
+
+    def __str__(self):
+        return f"{self.user_from} follows {self.user_to}."
