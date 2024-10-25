@@ -8,26 +8,47 @@
     {% endif %}
     <div class="container3">
         <div id="column_of_container3">
-            <ol style="--length: {{ posts|length }} " role="list">
-                {% for post in posts %}
-                    <li style="--i: {{ forloop.counter }}">
-                        <div>
-                            <h3><a href="{{ post.get_absolute_url }}">{{ post.description |truncatewords:5 |linebreaks }}</a></h3>
-                            <br>
+            <div id="post-list">
+                <ol style="--length: {{ posts|length }} " role="list">
+                    {% for post in posts %}
+                        <li style="--i: {{ forloop.counter }}">
                             <div>
-                                <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first.title }}" class="list_image">
+                                <h3><a href="{{ post.get_absolute_url }}">{{ post.description |truncatewords:5 |linebreaks }}</a></h3>
+                                <br>
+                                <div>
+                                    <img src="{{ post.images.first.image_file.url }}" alt="{{ post.images.first.title }}" class="list_image">
+                                </div>
+                                <p>Published at {{ post.created }} by {{ post.author }}</p>
+                                {% for tag in post.tags.all %}
+                                    <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
+                                    {% if not forloop.last %}<span>, </span>{% endif %}
+                                {% endfor %}
                             </div>
-                            <p>Published at {{ post.created }} by {{ post.author }}</p>
-                            {% for tag in post.tags.all %}
-                                <a href="{% url 'social:post_list_by_tag' tag.slug %}">{{ tag.name }}</a>
-                                {% if not forloop.last %}<span>, </span>{% endif %}
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% endfor %}
-            </ol>
+                        </li>
+                        <hr>
+                    {% endfor %}
+                </ol>
+            </div>
+
         </div>
     </div>
-    {% include "partials/pagination.html" with page=posts%}
-
+    <button id="load-more">نمایش بیشتر</button>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function(){
+            var page = 2;
+            $('#load-more').click(function(){
+                $.ajax({
+                    type : 'GET',
+                    url : "{% if tag %}{% url 'social:post_list_by_tag' tag.slug %}{% else %}{% url 'social:post_list' %}{% endif %}" + "?page=" + page,
+                    datatype : 'html',
+                    success : function (data) {
+                        $('#post-list').append(data);
+                        page += 1;
+                    }
+                });
+            });
+        });
+    </script>
+{#    {% include "partials/pagination.html" with page=posts%}#}
 {% endblock %}
