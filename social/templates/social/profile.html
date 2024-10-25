@@ -12,6 +12,8 @@
     </form>
     <p><a href="{% url 'social:password_change' %}">تغییر رمز عبور</a></p>
     <p><a href="{% url 'social:edit_user' %}">تغییر اطلاعات شخصی</a></p>
+    <br>
+    <h3>پست های من</h3>
     <table class="post_profile_table">
         <tr>
             <th>ردیف</th>
@@ -36,6 +38,28 @@
         {% empty %}
             <p>این کاربر هیچ پستی نداارد!!</p>
         {% endfor %}
+    </table>
+    <h3>پست های ذخیره شده</h3>
+    <table class="post_profile_table">
+        <tr>
+            <th>ردیف</th>
+            <th>پست</th>
+            <th>کپشن</th>
+            <th>نویسنده</th>
+            <th>تاریخ</th>
+            <th>مشاهده</th>
+        </tr>
+        {% for post in saved_posts %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><img src="{{ post.images.first.image_file.url }}" alt="{{post.images.first.title}}" class="img_profile"></td>
+                <td>{{ post.description |truncatewords:5 }}</td>
+                <td>{{ post.author }}</td>
+                <td>{{ post.created }}</td>
+                <td><a href="{{ post.get_absolute_url }}">مشاهده</a></td>
+            </tr>
+        {% endfor %}
+
     </table>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 

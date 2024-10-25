@@ -13,7 +13,6 @@ from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
 
 
-
 # Create your views here.
 
 
@@ -21,6 +20,7 @@ def profile(request):
     if request.user.is_authenticated:
         user = request.user
         all_posts = Post.objects.filter(author=user)
+        saved_posts = user.saved_posts.all()
 
         # صفحه بندی
         paginator = Paginator(all_posts, 5)
@@ -35,10 +35,11 @@ def profile(request):
 
         context = {
             'page_obj': page_obj,
+            'saved_posts': saved_posts
         }
         return render(request, 'social/profile.html', context)
     else:
-        return render(request,'registration/login.html')
+        return render(request, 'registration/login.html')
 
 
 def user_login(request):
@@ -188,9 +189,9 @@ def post_search(request):
         form = SearchForm(data=request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results1 = Post.objects.annotate(similarity=TrigramSimilarity('tags__name', query)).\
+            results1 = Post.objects.annotate(similarity=TrigramSimilarity('tags__name', query)). \
                 filter(similarity__gt=0.1)
-            results2 = Post.objects.annotate(similarity=TrigramSimilarity('description', query)).\
+            results2 = Post.objects.annotate(similarity=TrigramSimilarity('description', query)). \
                 filter(similarity__gt=0.1)
             results = (results1 | results2).order_by('-similarity').distinct()
 
@@ -257,7 +258,7 @@ def password_change_done(request):
 def like_post(request):
     post_id = request.POST.get('post_id')
     if post_id is not None:
-        post = get_object_or_404(Post,id=post_id)
+        post = get_object_or_404(Post, id=post_id)
         user = request.user
         if user in post.likes.all():
             post.likes.remove(user)
@@ -273,3 +274,23 @@ def like_post(request):
     else:
         response_data = {'error': 'Invalid post_id'}
     return JsonResponse(response_data)
+
+
+@login_required
+@require_POST
+def save_post(request):
+    post_id = request.POST.get('post_id')
+    if post_id is not None:
+        post = Post.objects.get(id=post_id)
+        # post = get_object_or_404(Post, id=post_id)
+        user = request.user
+
+        if user in post.saved_by.all():
+            post.saved_by.remove(user)
+            saved = False
+        else:
+            post.saved_by.add(user)
+            saved = True
+
+        return JsonResponse({'saved': saved})
+    return JsonResponse({'errors': 'Invalid request'})

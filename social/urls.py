@@ -24,6 +24,7 @@ urlpatterns = [
     path('profile/delete_image/<image_id>', views.delete_image, name="delete_image"),
     path('profile/delete_post/<post_id>', views.delete_post, name="delete_post"),
     path('like_post/', views.like_post, name="like_post"),
+    path('save_post/', views.save_post, name="save_post"),
 
     # path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done'),name='password_change'),
     path('password_change/', views.password_change, name='password_change'),
