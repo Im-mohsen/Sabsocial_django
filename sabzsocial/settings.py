@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'taggit',
     'django.contrib.postgres',
+    'easy_thumbnails',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = 'xeyrxozbckguwagl'
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
+# show errors for easy_thumbnails
+THUMBNAIL_DEBUG = True
