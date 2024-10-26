@@ -30,3 +30,6 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ['post', 'name', 'created', 'email']
     list_filter = ["created", "updated"]
     search_fields = ["name", "body"]
+
+
+admin.site.register(Contact)
