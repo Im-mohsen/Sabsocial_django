@@ -5,7 +5,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import *
-from .models import Post
+from .models import Post, Contact
 from django.core.mail import send_mail
 import datetime
 from taggit.models import Tag
@@ -306,3 +306,31 @@ def user_list(request):
 def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
     return render(request, 'user/user_detail.html', {'user': user})
+
+
+@login_required
+@require_POST
+def user_follow(request):
+    user_id = request.POST.get('id')
+    if user_id:
+        try:
+            user = User.objects.get(id=user_id)
+            if request.user in user.followers.all():
+                Contact.objects.filter(user_from=request.user, user_to=user).delete()
+                follow = False
+            else:
+                Contact.objects.get_or_create(user_from=request.user, user_to=user)
+                follow = True
+            following_count = user.following.count()
+            followers_count = user.followers.count()
+            response_data = {
+                'follow': follow,
+                'followers_count': followers_count,
+                'following_count': following_count,
+            }
+            return JsonResponse(response_data)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'Invalid post_id'})
+    return JsonResponse({'error': 'Invalid request'})
+
+
