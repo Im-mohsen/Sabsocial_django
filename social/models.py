@@ -18,6 +18,7 @@ class User(AbstractUser):
     job = models.CharField(max_length=250, blank=True, null=True)
     phone = models.CharField(max_length=11, blank=True, null=True)
     following = models.ManyToManyField('self', through='Contact', related_name='followers', symmetrical=False)
+    # through نشان دهنده همان جدول میانی می باشد
 
     def get_absolute_url(self):
         return reverse("social:user_detail", args=[self.username])
@@ -29,13 +30,15 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts")
+    total_likes = models.PositiveIntegerField(default=0)
     saved_by = models.ManyToManyField(User, related_name="saved_posts")
     tags = TaggableManager()
 
     class Meta:
         ordering = ["-created"]
         indexes = [
-            models.Index(fields=['-created'])
+            models.Index(fields=['-created']),
+            models.Index(fields=['-total_likes'])
         ]
         verbose_name = "پست"
         verbose_name_plural = "پست ها"
