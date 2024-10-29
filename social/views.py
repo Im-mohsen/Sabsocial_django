@@ -18,7 +18,8 @@ from django.contrib.postgres.search import TrigramSimilarity
 
 def profile(request):
     if request.user.is_authenticated:
-        user = request.user
+        # user = request.user
+        user = User.objects.prefetch_related('followers', 'following').get(id=request.user.id)
         all_posts = Post.objects.filter(author=user)
         saved_posts = user.saved_posts.all()
 
@@ -112,7 +113,7 @@ def ticket(request):
 
 
 def post_list(request, tag_slug=None):
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('author').all()
     tag = None
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)

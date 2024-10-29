@@ -28,6 +28,22 @@
     </form>
     <p><a href="{% url 'social:password_change' %}">تغییر رمز عبور</a></p>
     <p><a href="{% url 'social:edit_user' %}">تغییر اطلاعات شخصی</a></p>
+    <div>
+        <h3>کسانی که مرا دنبال می کنند:</h3>
+        {% for follower in user.followers.all %}
+            <p>follower</p>
+        {% empty %}
+            <a>کسی من را دنبال نمی کند!</a>
+        {% endfor %}
+    </div>
+    <div>
+        <h3>کسانی که من آنها را دنبال می کنم:</h3>
+        {% for follower in user.following.all %}
+            <p><a href="{{ follower.get_absolute_url }}">{{ follower.username }}</a></p>
+            {% empty %}
+            <p>من کسی را دنبال نمی کنم!</p>
+        {% endfor %}
+    </div>
     <br>
     <h3>پست های من</h3>
     <table class="post_profile_table">
