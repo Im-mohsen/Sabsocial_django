@@ -11,7 +11,7 @@ import datetime
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity
-
+from django.contrib import messages
 
 # Create your views here.
 
@@ -96,7 +96,6 @@ def edit_user(request):
 
 
 def ticket(request):
-    sent = False
     if request.method == "POST":
         form = TicketForm(request.POST)
         if form.is_valid():
@@ -106,10 +105,11 @@ def ticket(request):
             send_mail(cd['subject'], message, cd['email'], ['pcnoo2023@gmail.com'], fail_silently=False)
             # ticket_obj = Ticket.objects.create(message=cd['message'], name=cd['name'], email=cd['email']
             #                                    , phone=cd['phone'], subject=cd['subject'])
-            sent = True
+            messages.success(request, 'ایمیل شما با موفقیت ارسال شد.')
+            messages.warning(request, 'لطفا اطلاعات خود را به درستی وارد کنید!.')
     else:
         form = TicketForm()
-    return render(request, "forms/ticket.html", {'form': form, 'sent': sent})
+    return render(request, "forms/ticket.html", {'form': form})
 
 
 def post_list(request, tag_slug=None):

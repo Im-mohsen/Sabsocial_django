@@ -2,8 +2,10 @@
 {% block title %}Ticket form{% endblock %}
 {% block content %}
     <div class="forms_page">
-        {% if sent %}
-        	<h2>ایمیل شما به پشتیبانی ارسال شد.</h2>
+        {% if messages %}
+        	{% for message in messages %}
+        		<p>{{ message }}</p>
+        	{% endfor %}
         {% endif %}
         <h2>ثبت تیکت</h2>
         <form method="post" class="forms_box">
