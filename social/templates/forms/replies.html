@@ -1,0 +1,34 @@
+{% extends "parent/base.html" %}
+{% block title %}Reply ticket{% endblock %}
+{% block content %}
+    <h2>Reply to Ticket</h2>
+
+    <div class="ticket">
+        User: {{ ticket.user }}<br>
+        Email: {{ ticket.user.email }}<br>
+        <br><br>
+        title: {{ ticket.subject }}<br><br>
+        content: {{ ticket.content }}<br>
+        <br>
+    </div>
+
+    <div class="reply">
+        <form method="post">
+            {% csrf_token %}
+
+            <textarea name="reply" id="" cols="30" rows="10" placeholder="reply to ticket"></textarea>
+            <br>
+            <input type="submit" value="send reply">
+        </form>
+    </div>
+
+    <div class="messages">
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {{ form.errors }}
+{% endblock %}

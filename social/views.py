@@ -1,3 +1,4 @@
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import logout, login, authenticate
@@ -95,21 +96,68 @@ def edit_user(request):
     return render(request, 'registration/edit_user.html', context)
 
 
+@login_required
 def ticket(request):
+    user = request.user
     if request.method == "POST":
         form = TicketForm(request.POST)
         if form.is_valid():
+            ticket_obj = form.save(commit=False)
+            ticket_obj.user = user
+            ticket_obj.save()
+
             cd = form.cleaned_data
             now = datetime.datetime.now()
-            message = f"{cd['name']}\n{cd['email']}\n{cd['phone']}\n{now.strftime("%Y-%m-%d %H:%M")}\n\n{cd['message']}"
-            send_mail(cd['subject'], message, cd['email'], ['pcnoo2023@gmail.com'], fail_silently=False)
-            # ticket_obj = Ticket.objects.create(message=cd['message'], name=cd['name'], email=cd['email']
-            #                                    , phone=cd['phone'], subject=cd['subject'])
+            message = (f"Sender: {user}\ncontent: {cd['content']}\nemail: {user.email}\ndate: {now.strftime("%Y-%m-%d %H:%M")}"
+                       f"\n\nreply to ticket: {request.build_absolute_uri(f'/reply/{ticket_obj.id}')}")
+            send_mail(cd['subject'], message, 'mohsendarabi20003@gmail.com', ['pcnoo2023@gmail.com'], fail_silently=False)
             messages.success(request, 'ایمیل شما با موفقیت ارسال شد.')
-            messages.warning(request, 'لطفا اطلاعات خود را به درستی وارد کنید!.')
     else:
         form = TicketForm()
     return render(request, "forms/ticket.html", {'form': form})
+
+
+@staff_member_required
+def reply_to_ticket(request, ticket_id):
+    sent_ticket = get_object_or_404(Ticket, pk=ticket_id)
+    if request.method == "POST":
+        form = ReplyTicketForm(request.POST)
+        if form.is_valid():
+            if sent_ticket.is_opened == True:
+                reply_obj = form.save(commit=False)
+                reply_obj.ticket = sent_ticket
+                reply_obj.save()
+
+                subject = 'پاسخ به تیکت شما'
+                message = (f"سلام ادمین به تیکت شما پاسخ داد. هم اکنون میتوانید از لینک زیر آن را مشاهده کنید.\n{request.build_absolute_uri(f'/ticket/{ticket_id}')}")
+                send_mail(subject, message, 'mohsendarabi20003@gmail.com', [sent_ticket.user.email],
+                          fail_silently=False)
+
+                messages.success(request, 'پاسخ شما با موفقیت ارسال شد.')
+                sent_ticket.is_opened = False
+                sent_ticket.save()
+            else:
+                messages.success(request, 'این صفحه چت بسته شده')
+    else:
+        form = ReplyTicketForm()
+    return render(request, "forms/replies.html", {"form": form, "ticket": sent_ticket})
+
+
+def tickets_list(request):
+    user = request.user
+
+    if user.is_staff:
+        tickets = Ticket.objects.all()
+    else:
+        tickets = Ticket.objects.filter(user=user)
+
+    return render(request,'social/ticket_list.html', {'tickets': tickets})
+
+
+def ticket_detail(request, ticket_id):
+    ticket = get_object_or_404(Ticket, pk=ticket_id)
+
+    return render(request,'social/ticket_detail.html', {'ticket': ticket})
 
 
 def post_list(request, tag_slug=None):

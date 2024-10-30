@@ -31,7 +31,7 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts")
     total_likes = models.PositiveIntegerField(default=0)
-    saved_by = models.ManyToManyField(User, related_name="saved_posts", blank=True, null=True)
+    saved_by = models.ManyToManyField(User, related_name="saved_posts", blank=True)
     active = models.BooleanField(default=True)
     tags = TaggableManager()
 
@@ -108,3 +108,32 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.user_from} follows {self.user_to}."
+
+
+class Ticket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tickets')
+    subject = models.CharField(max_length=100)
+    content = models.TextField()
+    is_opened = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+        indexes = [models.Index(fields=['-created_at'])]
+
+    def __str__(self):
+        return f"{self.subject} - {self.user}"
+
+
+class TicketReply(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name='replies_to_ticket')
+    reply = models.TextField()
+    responded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['responded_at']
+        indexes = [models.Index(fields=['responded_at'])]
+        unique_together = ('ticket', 'reply')
+
+    def __str__(self):
+        return f"Reply to {self.ticket.subject} - {self.ticket.user}"

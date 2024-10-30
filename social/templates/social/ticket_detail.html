@@ -1,0 +1,23 @@
+{% extends "parent/base.html" %}
+{% block title %}Ticket detail{% endblock %}
+{% block content %}
+    <h2>ticket: {{ ticket.subject }}</h2>
+
+    <strong>Body:</strong> {{ ticket.content | linebreaks }}
+    <br>
+    {{ ticket.created_at }}
+    <hr>
+    {% if ticket.is_opened %}
+        <em>it's open</em>
+    {% else %}
+        <em>it closed</em>
+    {% endif %}
+
+    <h2>Reply:</h2>
+
+    <ul>
+        {% for response in ticket.replies_to_ticket.all %}
+            <li>{{ response.reply }} <br><hr> {{ response.responded_at }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

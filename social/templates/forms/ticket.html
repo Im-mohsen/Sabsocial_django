@@ -2,11 +2,6 @@
 {% block title %}Ticket form{% endblock %}
 {% block content %}
     <div class="forms_page">
-        {% if messages %}
-        	{% for message in messages %}
-        		<p>{{ message }}</p>
-        	{% endfor %}
-        {% endif %}
         <h2>ثبت تیکت</h2>
         <form method="post" class="forms_box">
             {% csrf_token %}
@@ -16,35 +11,17 @@
                 <option value="پیشنهاد" {% if form.subject.value == 'پیشنهاد' %}selected{% endif %} >پیشنهاد</option>
                 <option value="انتقاد" {% if form.subject.value == 'انتقاد' %}selected{% endif %} >انتقاد</option>
                 <option value="گزارش" {% if form.subject.value == 'گزارش' %}selected{% endif %} >گزارش</option>
+                <option value="سایر" {% if form.subject.value == 'سایر' %}selected{% endif %} >سایر</option>
             </select>
+
+            <label for="id_content">پیام:</label>
             <br>
-            <label for="id_name">نام و نام خانوادگی:</label>
-            <br>
-            <input type="text" name="name" id="id_name" required
-                    {% if form.name.value %} value="{{ form.name.value }}" {% endif %} >
-    {#        <span>{{ form.name.errors }}</span>#}
-            <br>
-            <label for="id_message">پیام:</label>
-            <br>
-            <textarea name="message" id="id_message" required>
-                {% if form.message.value %} {{ form.message.value }} {% endif %}</textarea>
-    {#        <span>{{ form.message.errors }}</span>#}
-            <br>
-            <label for="id_email">ایمیل:</label>
-            <br>
-            <input type="email" name="email" id="id_email" required
-                    {% if form.email.value %} value="{{ form.email.value }}" {% endif %} >
-    {#        <span>{{ form.email.errors }}</span>#}
-            <br>
-            <label for="id_phone">شماره تماس:</label>
-            <br>
-            <input type="text" name="phone" id="id_phone" minlength="11" maxlength="11" required aria-invalid="true"
-                    {% if form.phone.value %} value="{{ form.phone.value }}" {% endif %}>
-    {#        <span>{{ form.phone.errors }}</span>#}
+            <textarea name="content" id="id_content" required cols="20" rows="10">
+                {% if form.content.value %} {{ form.content.value }} {% endif %}</textarea>
             <br>
             <input type="submit" value="ثبت تیکت" id="bt_submit">
         </form>
-        {% if form.errors%}
+                {% if form.errors%}
             لطفا خطاهای زیر را اصلاح کنید!!
             <br>
             {% for field in form %}
@@ -59,6 +36,16 @@
 
         {% if form.non_field_errors %}
             {{ form.non_field_errors }}
+        {% endif %}
+
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li class="{{ message.tags | default:"" }}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
         {% endif %}
     </div>
 {% endblock %}

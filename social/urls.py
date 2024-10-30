@@ -13,7 +13,12 @@ urlpatterns = [
     # path('logout/', auth_views.LogoutView.as_view(template_name='registration/logged_out.html'), name='logout'),
     path('register/', views.register, name='register'),
     path('user/edit', views.edit_user, name='edit_user'),
+
     path('ticket/', views.ticket, name="ticket"),
+    path('reply/<int:ticket_id>', views.reply_to_ticket, name="reply_ticket"),
+    path('tickets_list/', views.tickets_list, name='tickets_list'),
+    path('ticket/<int:ticket_id>', views.ticket_detail, name='ticket_detail'),
+
     path('posts/', views.post_list, name="post_list"),
     path('posts/post/<slug:tag_slug>/', views.post_list, name="post_list_by_tag"),
     path('posts/create_post/', views.create_post, name="create_post"),

@@ -55,4 +55,13 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ["name", "body"]
 
 
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    list_display = ['user', 'subject', 'is_opened']
+
+@admin.register(TicketReply)
+class TicketReplyAdmin(admin.ModelAdmin):
+    list_display = ['ticket', 'reply']
+
+
 admin.site.register(Contact)

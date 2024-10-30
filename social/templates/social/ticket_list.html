@@ -1,0 +1,21 @@
+{% extends "parent/base.html" %}
+{% block title %}Ticket list{% endblock %}
+{% block content %}
+    <h2>tickets list</h2>
+
+    <ul>
+        {% for ticket in tickets %}
+            <li>
+                <strong>{{ ticket.subject }}</strong> - {{ ticket.created_at }}
+                <br>
+                <a href="{% url 'social:ticket_detail' ticket.id %}">{{ ticket.content | truncatewords:10 }}</a>
+                <br>
+                {% if ticket.is_opened %}
+                    <em>it's open</em>
+                {% else %}
+                    <em>it closed</em>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
