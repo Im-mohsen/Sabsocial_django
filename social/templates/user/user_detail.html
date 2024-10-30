@@ -27,7 +27,7 @@
     {% else %}
         <img src="{% static '/images/user.png' %}" style="width: 100px">
     {% endif %}
-    {% with total_followers=user.followers.count total_followings=user.following.count  %}
+    {% with total_followers=user.followers.count total_following=user.following.count  %}
         <p><span class="followers-count">{{ total_followers }} Follower{{ total_followers|pluralize }}</span></p>
         <p><span class="following-count">{{ total_following }} Following</span></p>
     	<p></p>
