@@ -31,7 +31,8 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
     likes = models.ManyToManyField(User, blank=True, related_name="liked_posts")
     total_likes = models.PositiveIntegerField(default=0)
-    saved_by = models.ManyToManyField(User, related_name="saved_posts")
+    saved_by = models.ManyToManyField(User, related_name="saved_posts", blank=True, null=True)
+    active = models.BooleanField(default=True)
     tags = TaggableManager()
 
     class Meta:

@@ -13,12 +13,35 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
+# action function
+def make_deactivation(modeladmin, request, queryset):
+    result = queryset.update(active=False)
+    if result==1:
+        modeladmin.message_user(request, f"{result} Post were rejected")
+    else:
+        modeladmin.message_user(request, f"{result} Posts were rejected")
+
+
+make_deactivation.short_description = 'رد پست'
+
+
+def make_activation(modeladmin, request, queryset):
+    result = queryset.update(active=True)
+    if result==1:
+        modeladmin.message_user(request, f"{result} Post were accepted")
+    else:
+        modeladmin.message_user(request, f"{result} Posts were accepted")
+
+
+make_activation.short_description = 'تایید پست'
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['author','created']
+    list_display = ['author', 'created', 'description', 'active']
     ordering = ["created"]
     search_fields = ["description"]
-
+    actions = [make_deactivation,make_activation]
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
