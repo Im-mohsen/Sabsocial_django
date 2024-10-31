@@ -383,3 +383,12 @@ def user_follow(request):
     return JsonResponse({'error': 'Invalid request'})
 
 
+def user_contact(request, username, rel):
+    user = get_object_or_404(User, username=username, is_active=True)
+    if rel == 'followers':
+        contacts = user.followers.all()
+    elif rel == 'following':
+        contacts = user.following.all()
+    else:
+        contacts = None
+    return render(request, 'user/user_contact.html', {'users': contacts, 'rel': rel})

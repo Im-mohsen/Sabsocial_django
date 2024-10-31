@@ -1,0 +1,31 @@
+{% extends "parent/base.html" %}
+{% load thumbnail %}
+{% load static %}
+{% block title %}User list{% endblock %}
+{% block content %}
+    <h1>
+        {% if rel %}
+            <!-- following or followers -->
+            {{ rel }}
+        {% else %}
+            All Users
+        {% endif %}
+    </h1>
+
+    <!-- ——————————————————————— user's list ——————————————————————— -->
+    {% for user in users %}
+        <!-- ---------  نمایش تصویر پروفایل  --------- -->
+        {% if user.photo %}
+            <a href="{{ user.get_absolute_url }}">
+                <img src="{% thumbnail user.photo 100x100 quality=80 %}" alt="profile-image">
+            </a>
+        {% else %}
+            <a href="{{ user.get_absolute_url }}">
+                <img src="{% static 'images/user.png' %}" alt="avatar" style="width: 100px">
+            </a>
+        {% endif %}
+
+        <!-- ---------- نمایش اسم کاربر ---------- -->
+        <a href="{{ user.get_absolute_url }}"> {{ user.username }} </a><br><br>
+    {% endfor %}
+{% endblock %}

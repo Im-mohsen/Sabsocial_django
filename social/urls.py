@@ -33,6 +33,7 @@ urlpatterns = [
     path('users/', views.user_list, name="user_list"),
     path('users/detail/<username>/', views.user_detail, name="user_detail"),
     path('users/follow/', views.user_follow, name="user_follow"),
+    path('user_contact/<str:username>/<str:rel>/', views.user_contact, name="user_contact"),
 
     # path('password_change/', auth_views.PasswordChangeView.as_view(success_url='done'),name='password_change'),
     path('password_change/', views.password_change, name='password_change'),

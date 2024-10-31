@@ -30,6 +30,7 @@
     <p><a href="{% url 'social:edit_user' %}">تغییر اطلاعات شخصی</a></p>
     <p><a href="{% url 'social:ticket' %}">ارسال تیکت</a></p>
     <p><a href="{% url 'social:tickets_list' %}">لیست تیکت ها</a></p>
+    <p><a href="{% url 'social:user_list' %}">لیست کاربران</a></p>
     <div>
         <h3>کسانی که مرا دنبال می کنند:</h3>
         {% for follower in user.followers.all %}

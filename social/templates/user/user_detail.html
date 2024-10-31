@@ -28,8 +28,8 @@
         <img src="{% static '/images/user.png' %}" style="width: 100px">
     {% endif %}
     {% with total_followers=user.followers.count total_following=user.following.count  %}
-        <p><span class="followers-count">{{ total_followers }} Follower{{ total_followers|pluralize }}</span></p>
-        <p><span class="following-count">{{ total_following }} Following</span></p>
+        <p><span class="followers-count">{{ total_followers }}<a href="{% url 'social:user_contact' user.username "followers" %}">Follower{{ total_followers|pluralize }}</a></span></p>
+        <p><span class="following-count">{{ total_following }}<a href="{% url 'social:user_contact' user.username "following" %}">Following</a></span></p>
     	<p></p>
 
     {% endwith %}
