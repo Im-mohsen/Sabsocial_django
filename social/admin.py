@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import *
 from django.contrib.auth.admin import UserAdmin
+from django.core.mail import send_mail
 
 # Register your models here.
 
@@ -36,12 +37,28 @@ def make_activation(modeladmin, request, queryset):
 make_activation.short_description = 'تایید پست'
 
 
+def post_status(modeladmin, request, queryset):
+    for post in queryset:
+        if post.active:
+            status = 'Activated'
+        else:
+            status = 'deactivated'
+        text = post.description.split()[:5]
+        tr_word = ' '
+        send_mail('Post_status',f"Your post ({tr_word.join(text)}) has been {status} by admin",
+                  'mohsendarabi20003@gmail.com',[post.author.email],)
+        modeladmin.message_user(request, "Post status, was sent")
+
+
+post_status.short_description = 'ارسال وضعیت پست به کاربر'
+
+
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ['author', 'created', 'description', 'active']
     ordering = ["created"]
     search_fields = ["description"]
-    actions = [make_deactivation,make_activation]
+    actions = [make_deactivation, make_activation, post_status]
 
 @admin.register(Image)
 class ImageAdmin(admin.ModelAdmin):
