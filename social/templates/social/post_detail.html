@@ -48,25 +48,20 @@
             {% endwith %}
         </div>
         <div class="comment-box">
-            {% for comment in comments %}
-                <div id="comment-title">
-                    {{ comment.name }}
-                    <br>
-                    {{ comment.created}}
-                    <br>
-                </div>
-                {{ comment.body |linebreaks }}
-                <hr>
-            {% empty %}
-                کامنتی وجود ندارد!!
-            {% endfor %}
-            <div class="comment-form">
-                <form method="post" action="{% url 'social:post_comment' post.id %}">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="submit" value="افزودن کامنت">
-                </form>
+            <div class="comments" id="comments-list">
+                {% for comment in comments %}
+                    <p>User: {{ comment.user.username }}</p>
+                    <div>{{ comment.content | linebreaks }} - {{ comment.created }}</div>
+                    <hr>
+                {% empty %}
+                    <p>هیچ کامنتی وجود ندارد.</p>
+                {% endfor %}
             </div>
+            <form id="comment-form" method="post" onsubmit="return false;">
+                {% csrf_token %}
+                <textarea id="comment-content" rows="4" required></textarea><br>
+                <button type="submit" class="add-comment">Add Comment</button>
+            </form>
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -108,6 +103,36 @@
                        console.log("خطا در ارسال درخواست AJAX: " + error);
                    }
                    });
+            });
+            $('#comment-form').on('submit', function(e) {
+                e.preventDefault();
+
+                const content = $('#comment-content').val();
+                const csrfToken = '{{ csrf_token }}';
+
+                $.ajax({
+                    url: '{% url "social:add_comment" post.id %}',
+                    type: 'POST',
+                    data: {
+                        'content': content,
+                        'csrfmiddlewaretoken': csrfToken,
+                    },
+                    success: function(response) {
+                        if (response.status === 'success') {
+                            $('#comments-list').append(`
+                                    <p>User: ${response.user}</p>
+                                    <div>${response.content} - ${response.created}</div>
+                                    <hr>
+                                `);
+                            $('#comment-content').val(''); // خالی کردن محتوای تکست باکس
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('کامنت شما ثبت شد لطفا صفحه را رفرش کنید.');
+                    }
+                });
             });
         });
     </script>

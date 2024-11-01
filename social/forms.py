@@ -98,22 +98,10 @@ class PostForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    def clean_name(self):
-        name = self.cleaned_data['name']
-        if name:
-            if len(name) < 3:
-                raise forms.ValidationError("نام کوتاه است!!")
-            else:
-                return name
-
     class Meta:
         model = Comment
-        fields = ['name', 'email', 'body']
-        # widgets = {
-        #     'body': forms.TextInput(attrs={'class': 'body_boxe_form'}),
-        #     'name': forms.TextInput(attrs={'class': 'boxes_form'}),
-        #     'email': forms.TextInput(attrs={'class': 'boxes_form'})
-        # }
+        fields = ['content']
+
 
 
 class SearchForm(forms.Form):

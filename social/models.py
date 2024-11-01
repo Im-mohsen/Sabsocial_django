@@ -76,10 +76,9 @@ class Image(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments", verbose_name="پست")
-    name = models.CharField(max_length=250, verbose_name="نام")
-    body = models.TextField(verbose_name="متن کامنت")
-    email = models.EmailField(max_length=250, verbose_name="ایمیل")
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_comments", verbose_name="پست")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comments")
+    content = models.TextField(verbose_name="متن کامنت")
     created = models.DateTimeField(auto_now_add=True, verbose_name="تاریخ ایجاد")
     updated = models.DateTimeField(auto_now=True, verbose_name="تاریخ اپدیت")
 
@@ -92,7 +91,7 @@ class Comment(models.Model):
         verbose_name_plural = "کامنت ها"
 
     def __str__(self):
-        return f"{self.name}: {self.post}"
+        return self.content
 
 
 class Contact(models.Model):

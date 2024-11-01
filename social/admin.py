@@ -67,9 +67,9 @@ class ImageAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['post', 'name', 'created', 'email']
+    list_display = ['post', 'user', 'created']
     list_filter = ["created", "updated"]
-    search_fields = ["name", "body"]
+    search_fields = ["user", "content"]
 
 
 @admin.register(Ticket)
