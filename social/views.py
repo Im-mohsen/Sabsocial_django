@@ -392,3 +392,9 @@ def user_contact(request, username, rel):
     else:
         contacts = None
     return render(request, 'user/user_contact.html', {'users': contacts, 'rel': rel})
+
+
+def users_like(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    return render(request, 'user/users_like.html', {'post': post, 'post_id': post_id})

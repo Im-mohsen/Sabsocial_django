@@ -29,7 +29,7 @@
                     Save
                 {% endif %}
             </button>
-            <p><span class="likes-count">{{ post.likes.count }}</span> Likes</p>
+            <p><span class="likes-count">{{ post.likes.count }}</span> <a href="{% url 'social:users_like' post.id %}">Likes</a></p>
         </div>
 
         {% for tag in post.tags.all %}

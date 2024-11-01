@@ -1,0 +1,20 @@
+{% extends "parent/base.html" %}
+{% load thumbnail %}
+{% load static %}
+{% block title %}Users like{% endblock %}
+{% block content %}
+    {% for user in post.likes.all %}
+        {% if user.photo %}
+            <a href="{{ user.get_absolute_url }}">
+                <img src="{% thumbnail user.photo 100x100 quality=80 %}" alt="profile-image">
+            </a>
+        {% else %}
+            <a href="{{ user.get_absolute_url }}">
+                <img src="{% static 'images/user.png' %}" alt="avatar" style="width: 100px">
+            </a>
+        {% endif %}
+    	<a href="{{ user.get_absolute_url }}">{{ user.username }}</a>
+        <br><br>
+    {% endfor %}
+
+{% endblock %}
