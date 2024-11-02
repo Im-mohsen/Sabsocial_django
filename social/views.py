@@ -364,7 +364,14 @@ def user_list(request):
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username, is_active=True)
-    return render(request, 'user/user_detail.html', {'user': user})
+    following = user.get_following()
+    followers = user.get_followers()
+    context = {
+        'user': user,
+        'following': following,
+        'followers': followers,
+    }
+    return render(request, 'user/user_detail.html', context)
 
 
 @login_required
@@ -396,9 +403,9 @@ def user_follow(request):
 def user_contact(request, username, rel):
     user = get_object_or_404(User, username=username, is_active=True)
     if rel == 'followers':
-        contacts = user.followers.all()
+        contacts = user.get_following()
     elif rel == 'following':
-        contacts = user.following.all()
+        contacts = user.get_following()
     else:
         contacts = None
     return render(request, 'user/user_contact.html', {'users': contacts, 'rel': rel})

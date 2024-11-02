@@ -23,6 +23,12 @@ class User(AbstractUser):
     def get_absolute_url(self):
         return reverse("social:user_detail", args=[self.username])
 
+    def get_followers(self):
+        return [contact.user_from for contact in self.rel_to_set.all().order_by('created')]
+
+    def get_following(self):
+        return [contact.user_to for contact in self.rel_from_set.all().order_by('created')]
+
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_posts", verbose_name="نویسنده")
